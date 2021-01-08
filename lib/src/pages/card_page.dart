@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_credit_card/flutter_credit_card.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:payment_flutter_app/src/models/tajeta_credito.dart';
 import 'package:payment_flutter_app/src/widgets/total_pay_button.dart';
 
@@ -17,6 +18,12 @@ class CardPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text("Pagar"),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios),
+          onPressed: (){
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: Stack(
         children: [

@@ -1,5 +1,8 @@
+import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_credit_card/flutter_credit_card.dart';
+import 'package:payment_flutter_app/bloc/pay_bloc/pay_bloc.dart';
 import 'package:payment_flutter_app/helpers/helpers.dart';
 import 'package:payment_flutter_app/src/data/tarjetas.dart';
 import 'package:payment_flutter_app/src/pages/card_page.dart';
@@ -9,6 +12,8 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+
+    final paymentBloc = BlocProvider.of<PayBloc>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -42,6 +47,8 @@ class HomePage extends StatelessWidget {
                   final tarjeta = tarjetas[i];
                   return GestureDetector(
                     onTap: () {
+
+                      paymentBloc.add(OnSeleccionarTarjeta(tarjeta));
                       Navigator.push(
                           context, navegarMapaFadeIn(context, CardPage()));
                     },

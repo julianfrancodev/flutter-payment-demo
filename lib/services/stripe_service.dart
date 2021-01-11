@@ -15,8 +15,15 @@ class StripeService {
   String _paymentApiUrl = "https://api.stripe.com/v1/payment_intents";
   String _secretKey =
       "sk_test_51I7tjaBc8UD4HgB5S4iXPdOONM48zHM6cbNYpg5bXx9UUXBVD6W6o6j1W5ixU2pLBLqg0YvcH4wUBKJIwWsUoh35000ftXSDJf";
+  String _apiKey =
+      "pk_test_51I7tjaBc8UD4HgB524pyLvT81nFzXBId9tmj2M6cx9XrfnflOkMobjDXAAxrkNHUb8QtAwI5oMW1P35QoCBUImUz00E8PevqDs";
 
-  void init() {}
+  void init() {
+    StripePayment.setOptions(StripeOptions(
+        publishableKey: this._apiKey,
+        androidPayMode: "test",
+        merchantId: "test"));
+  }
 
   Future pagarConTarjeta(
       {@required String amount,

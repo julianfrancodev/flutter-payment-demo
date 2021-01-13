@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:payment_flutter_app/src/models/stripe_custom_response.dart';
 import 'package:stripe_payment/stripe_payment.dart';
 
 class StripeService {
@@ -30,8 +31,21 @@ class StripeService {
       @required String currency,
       @required CreditCard card}) async {}
 
-  Future pagarConNuevaTarjeta(
-      {@required String amount, @required String currency}) async {}
+  Future<StripeCustomResponse> pagarConNuevaTarjeta(
+      {@required String amount, @required String currency}) async {
+    try {
+      final paymentMethod = await StripePayment.paymentRequestWithCardForm(
+        CardFormPaymentRequest()
+      );
+
+      //todo: create intent
+
+      return StripeCustomResponse(ok: true);
+
+    } catch (error) {
+      return StripeCustomResponse(ok: false, msg: error.toString());
+    }
+  }
 
   Future pagarApplePayGooglePay(
       {@required String amount, @required String currency}) async {}

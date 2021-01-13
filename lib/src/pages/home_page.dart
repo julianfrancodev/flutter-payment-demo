@@ -4,11 +4,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_credit_card/flutter_credit_card.dart';
 import 'package:payment_flutter_app/bloc/pay_bloc/pay_bloc.dart';
 import 'package:payment_flutter_app/helpers/helpers.dart';
+import 'package:payment_flutter_app/services/stripe_service.dart';
 import 'package:payment_flutter_app/src/data/tarjetas.dart';
 import 'package:payment_flutter_app/src/pages/card_page.dart';
 import 'package:payment_flutter_app/src/widgets/total_pay_button.dart';
 
 class HomePage extends StatelessWidget {
+  final stripeService = new StripeService();
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -22,14 +25,21 @@ class HomePage extends StatelessWidget {
           IconButton(
               icon: Icon(Icons.add),
               onPressed: () async {
-                // showLoading(context);
-                //
-                // await Future.delayed(Duration(seconds: 1));
-                //
-                // Navigator.pop(context);
 
-                showAlert(context, 'Hola','Mundo');
+                final amount = paymentBloc.state.monto.floor().toString();
 
+                final currency = paymentBloc.state.moneda;
+
+
+
+                final resp = await stripeService.pagarConNuevaTarjeta(
+                    amount: amount, currency: currency);
+
+                if(resp.ok){
+                  showAlert(context, "Tarjeta Ok", "Todo correcto");
+                }else{
+                  showAlert(context, "Algo Salio Mal", resp.msg);
+                }
               })
         ],
       ),
@@ -47,7 +57,6 @@ class HomePage extends StatelessWidget {
                   final tarjeta = tarjetas[i];
                   return GestureDetector(
                     onTap: () {
-
                       paymentBloc.add(OnSeleccionarTarjeta(tarjeta));
                       Navigator.push(
                           context, navegarMapaFadeIn(context, CardPage()));

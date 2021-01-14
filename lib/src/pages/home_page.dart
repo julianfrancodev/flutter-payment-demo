@@ -25,20 +25,18 @@ class HomePage extends StatelessWidget {
           IconButton(
               icon: Icon(Icons.add),
               onPressed: () async {
-
                 final amount = paymentBloc.state.monto.floor().toString();
 
                 final currency = paymentBloc.state.moneda;
 
-
-
                 final resp = await stripeService.pagarConNuevaTarjeta(
                     amount: amount, currency: currency);
 
-                if(resp.ok){
+                if (resp.ok) {
                   showAlert(context, "Tarjeta Ok", "Todo correcto");
-                }else{
-                  showAlert(context, "Algo Salio Mal", resp.msg);
+                } else {
+                  showAlert(context, "El Pago no se puedo realizar",
+                      "Intenta nuevamente");
                 }
               })
         ],

@@ -33,7 +33,7 @@ class HomePage extends StatelessWidget {
                     amount: amount, currency: currency);
 
                 if (resp.ok) {
-                  showAlert(context, "Tarjeta Ok", "Todo correcto");
+                  showAlert(context, "Tarjeta Validada", "Todo correcto");
                 } else {
                   showAlert(context, "El Pago no se puedo realizar",
                       "Intenta nuevamente");

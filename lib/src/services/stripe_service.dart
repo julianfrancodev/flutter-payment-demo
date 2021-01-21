@@ -1,4 +1,6 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:payment_flutter_app/src/models/payment_intent.dart';
 import 'package:payment_flutter_app/src/models/stripe_custom_response.dart';
 import 'package:stripe_payment/stripe_payment.dart';
 
@@ -14,10 +16,14 @@ class StripeService {
   }
 
   String _paymentApiUrl = "https://api.stripe.com/v1/payment_intents";
-  String _secretKey =
+  static String _secretKey =
       "sk_test_51I7tjaBc8UD4HgB5S4iXPdOONM48zHM6cbNYpg5bXx9UUXBVD6W6o6j1W5ixU2pLBLqg0YvcH4wUBKJIwWsUoh35000ftXSDJf";
   String _apiKey =
       "pk_test_51I7tjaBc8UD4HgB524pyLvT81nFzXBId9tmj2M6cx9XrfnflOkMobjDXAAxrkNHUb8QtAwI5oMW1P35QoCBUImUz00E8PevqDs";
+
+  final headerOptions = new Options(
+      contentType: Headers.formUrlEncodedContentType,
+      headers: {"Authorization": "Bearer ${StripeService._secretKey}"});
 
   void init() {
     StripePayment.setOptions(StripeOptions(
@@ -35,23 +41,38 @@ class StripeService {
       {@required String amount, @required String currency}) async {
     try {
       final paymentMethod = await StripePayment.paymentRequestWithCardForm(
-        CardFormPaymentRequest()
-      );
+          CardFormPaymentRequest());
 
       //todo: create intent
 
-      return StripeCustomResponse(ok: true);
+      final resp =
+          await this._crearPaymentIntent(amount: amount, currency: currency);
 
+      return StripeCustomResponse(ok: true);
     } catch (error) {
       return StripeCustomResponse(ok: false, msg: error.toString());
     }
   }
 
-  Future pagarApplePayGooglePay(
+  Future<PaymentIntentResponse> pagarApplePayGooglePay(
       {@required String amount, @required String currency}) async {}
 
   Future _crearPaymentIntent(
-      {@required String amount, @required String currency}) async {}
+      {@required String amount, @required String currency}) async {
+    try {
+      final dio = new Dio();
+
+      final data = {"amount": amount, "currency": currency};
+
+      final response = await dio.post(this._paymentApiUrl,
+          data: data, options: headerOptions);
+
+      return PaymentIntentResponse.fromJson(response.data);
+    } catch (error) {
+      print(error);
+      return PaymentIntentResponse(status: "400");
+    }
+  }
 
   Future _realizarPago(
       {@required String amount,

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:payment_flutter_app/bloc/pay_bloc/pay_bloc.dart';
-import 'package:payment_flutter_app/services/stripe_service.dart';
-import 'package:payment_flutter_app/src/pages/home_page.dart';
+import 'package:payment_flutter_app/src/bloc/pay_bloc/pay_bloc.dart';
 import 'package:payment_flutter_app/src/routes/routes.dart';
+import 'package:payment_flutter_app/src/services/stripe_service.dart';
 
 void main() {
   runApp(MyApp());

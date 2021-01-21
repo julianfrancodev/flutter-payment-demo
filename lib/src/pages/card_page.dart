@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_credit_card/flutter_credit_card.dart';
-import 'package:payment_flutter_app/bloc/pay_bloc/pay_bloc.dart';
+import 'package:payment_flutter_app/src/bloc/pay_bloc/pay_bloc.dart';
 import 'package:payment_flutter_app/src/widgets/total_pay_button.dart';
 
 class CardPage extends StatelessWidget {

@@ -25,12 +25,17 @@ class HomePage extends StatelessWidget {
           IconButton(
               icon: Icon(Icons.add),
               onPressed: () async {
+
+                showLoading(context);
+
                 final amount = paymentBloc.state.monto.floor().toString();
 
                 final currency = paymentBloc.state.moneda;
 
                 final resp = await stripeService.pagarConNuevaTarjeta(
                     amount: amount, currency: currency);
+
+                Navigator.pop(context);
 
                 if (resp.ok) {
                   showAlert(context, "Tarjeta Validada", "Todo correcto");

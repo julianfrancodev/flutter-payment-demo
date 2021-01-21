@@ -43,12 +43,10 @@ class StripeService {
       final paymentMethod = await StripePayment.paymentRequestWithCardForm(
           CardFormPaymentRequest());
 
-      //todo: create intent
+      final resp = await this._realizarPago(
+          amount: amount, currency: currency, paymentMethod: paymentMethod);
 
-      final resp =
-          await this._crearPaymentIntent(amount: amount, currency: currency);
-
-      return StripeCustomResponse(ok: true);
+      return resp;
     } catch (error) {
       return StripeCustomResponse(ok: false, msg: error.toString());
     }
@@ -56,6 +54,23 @@ class StripeService {
 
   Future<PaymentIntentResponse> pagarApplePayGooglePay(
       {@required String amount, @required String currency}) async {}
+
+  Future<StripeCustomResponse> pagarConTarjetaExistente(
+      {@required String amount,
+      @required String currency,
+      @required CreditCard card}) async {
+    try {
+      final paymentMethod = await StripePayment.createPaymentMethod(
+          PaymentMethodRequest(card: card));
+
+      final resp = await this._realizarPago(
+          amount: amount, currency: currency, paymentMethod: paymentMethod);
+
+      return resp;
+    } catch (error) {
+      return StripeCustomResponse(ok: false, msg: error.toString());
+    }
+  }
 
   Future _crearPaymentIntent(
       {@required String amount, @required String currency}) async {
@@ -74,8 +89,30 @@ class StripeService {
     }
   }
 
-  Future _realizarPago(
+  Future<StripeCustomResponse> _realizarPago(
       {@required String amount,
       @required String currency,
-      @required PaymentMethod paymentMethod}) async {}
+      @required PaymentMethod paymentMethod}) async {
+    try {
+      final PaymentIntentResponse paymentIntent =
+          await this._crearPaymentIntent(amount: amount, currency: currency);
+
+      final paymentResult =
+          await StripePayment.confirmPaymentIntent(PaymentIntent(
+        clientSecret: paymentIntent.clientSecret,
+        paymentMethodId: paymentMethod.id,
+      ));
+
+      if (paymentResult.status == "succeeded") {
+        return StripeCustomResponse(ok: true);
+      } else {
+        return StripeCustomResponse(
+            ok: false, msg: "Fallo ${paymentResult.status}");
+      }
+    } catch (e) {
+      print(e);
+
+      return StripeCustomResponse(ok: false, msg: e.toString());
+    }
+  }
 }

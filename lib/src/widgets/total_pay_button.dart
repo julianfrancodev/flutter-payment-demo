@@ -74,8 +74,6 @@ class _BtnPay extends StatelessWidget {
           showAlert(
               context, "El Pago no se puedo realizar", "Intenta nuevamente");
         }
-
-
       },
       height: 45,
       minWidth: 170,
@@ -100,7 +98,13 @@ class _BtnPay extends StatelessWidget {
 
   Widget buildAppleAndGoogle(BuildContext context) {
     return MaterialButton(
-      onPressed: () {},
+      onPressed: () async {
+        final StripeService stripeService = new StripeService();
+        final payBloc = BlocProvider.of<PayBloc>(context).state;
+
+        final resp = await stripeService.pagarApplePayGooglePay(
+            amount: payBloc.monto.toString(), currency: payBloc.moneda);
+      },
       height: 45,
       minWidth: 150,
       shape: StadiumBorder(),
@@ -127,6 +131,6 @@ class _BtnPay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return true ? buildButtonCard(context) : buildAppleAndGoogle(context);
+    return true ? buildAppleAndGoogle(context) : buildAppleAndGoogle(context);
   }
 }

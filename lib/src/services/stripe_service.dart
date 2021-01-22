@@ -52,8 +52,22 @@ class StripeService {
     }
   }
 
-  Future<PaymentIntentResponse> pagarApplePayGooglePay(
-      {@required String amount, @required String currency}) async {}
+  Future<StripeCustomResponse> pagarApplePayGooglePay(
+      {@required String amount, @required String currency}) async {
+    try {
+      final token = await StripePayment.paymentRequestWithNativePay(
+          androidPayOptions: AndroidPayPaymentRequest(
+              currencyCode: currency, totalPrice: amount),
+          applePayOptions: ApplePayPaymentOptions(
+              countryCode: "USD",
+              currencyCode: currency,
+              items: [
+                ApplePayItem(label: "Producto de mierda", amount: amount)
+              ]));
+    } catch (e) {
+      return StripeCustomResponse(ok: false, msg: "Fallo Intenta de nuevo");
+    }
+  }
 
   Future<StripeCustomResponse> pagarConTarjetaExistente(
       {@required String amount,

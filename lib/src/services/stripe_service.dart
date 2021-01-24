@@ -62,7 +62,7 @@ class StripeService {
               countryCode: "USD",
               currencyCode: currency,
               items: [
-                ApplePayItem(label: "Producto de mierda", amount: amount)
+                ApplePayItem(label: "Producto 1", amount: amount)
               ]));
     } catch (e) {
       return StripeCustomResponse(ok: false, msg: "Fallo Intenta de nuevo");
